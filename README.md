@@ -6,7 +6,7 @@ Java code for FRC team 4461 'Ramen'
 Guidelines
 ====
 
-As a programmer we shall be using GitHub to share and collarerbraite with each other. Use this wisely like the great Spiderman says,"With great power comes great responsibilities and Batman says,"I'm Batman".
+As a programmer we shall be using GitHub to share and collaborate with each other. Use this wisely like the great Spiderman says,"With great power comes great responsibilities and Batman says,"I'm Batman".
 
 Programming Memes
 ====
