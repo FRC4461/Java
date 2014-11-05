@@ -2,7 +2,7 @@ Java
 ====
 
 Java code for FRC team 4461 'Ramen' '
-http://www.vinyl-decals.com/prodimages/chinese-noodles-decal.gif
+
 
 Guidelines
 ====
