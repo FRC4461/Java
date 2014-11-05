@@ -2,11 +2,12 @@ Java
 ====
 
 Java code for FRC team 4461 'Ramen' '
+http://www.vinyl-decals.com/prodimages/chinese-noodles-decal.gif
 
 Guidelines
 ====
 
-As a programmer we stall be using GitHub to share and collarerbraite with each other. Use this wisely like the great Spiderman says,"With great power comes great responsibilities and Batman says,"I'm Batman".
+As a programmer we shall be using GitHub to share and collarerbraite with each other. Use this wisely like the great Spiderman says,"With great power comes great responsibilities and Batman says,"I'm Batman".
 
 Programming Memes
 ====
