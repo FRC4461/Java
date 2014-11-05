@@ -3,5 +3,7 @@ Java
 
 Java code for FRC team 4461 'Ramen' '
 
-This is where you put your code to be shared with others.
-![alt tag](2wCEAAkGBxQTEhQUExMWFhUXGRgaGBgYGBwYHRwcGiEaHB4bHh0gHCggHholHBwcITEhJSkrLi4uHB8zODQsNygtLiwBCgoKDg0OGxAQGzQkICQsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLP)
+Guidelines
+====
+
+As a programmer we stall be using GitHub to share and collarerbraite with each other. Use this wisely like the great Spiderman says,"With great power comes great respoisiblities and Batman says,"I'm Batman".
