@@ -1,0 +1,1 @@
+This is a simple test program for using on the testbed robot. This is not intended to be copied or used for the actual robot used in competition.
