@@ -8,6 +8,11 @@ Guidelines
 
 As a programmer we shall be using GitHub to share and collaborate with each other. Use this wisely like the great Spiderman says,"With great power comes great responsibilities and Batman says,"I'm Batman".
 
+Getting Started
+====
+
+Check out the lessons section that contains material and links on getting started and learning more about programming the roboRio. If you have any questions, you can reach myself (Tim) on Skype using the skype ID timothy.t.waterhouse at the domain of gmail (obsfuscated to prevent spam bots from picking it up).
+
 Programming Memes
 ====
 ![alt tag](http://media.tumblr.com/tumblr_ktinh8k8J01qa4kqk.jpg)
