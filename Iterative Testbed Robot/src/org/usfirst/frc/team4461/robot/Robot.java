@@ -41,6 +41,7 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         this.drive.arcadeDrive(j0);
+        System.out.println("Joystick X: ");
     }
     
     /**
