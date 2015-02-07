@@ -2,6 +2,11 @@
 package org.usfirst.frc.team4461.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.image.ColorImage;
+import edu.wpi.first.wpilibj.image.NIVisionException;
+import edu.wpi.first.wpilibj.image.RGBImage;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -11,57 +16,108 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * directory.
  */
 public class Robot extends IterativeRobot {
-	AutonomousStates state = AutonomousStates.AutoStart;
-	RoutineOne state2 = RoutineOne.AutoStart;
-	RoutineTwo state3 = RoutineTwo.AutoStart;
-	int timeForward1 = 0;
-	int timeTurning = 0;
-	int timeForward2 = 0;
+	//Routines
+		AutonomousStates state = AutonomousStates.AutoStart;
+		RoutineOne state2 = RoutineOne.AutoStart;
+		RoutineTwo state3 = RoutineTwo.AutoStart;
 	
+	//Timer
+		int timeForward1 = 0;
+		int timeTurning = 0;
+		int timeForward2 = 0;
 	
-	edu.wpi.first.wpilibj.Joystick joystick = new edu.wpi.first.wpilibj.Joystick(0);
-	edu.wpi.first.wpilibj.Victor frontRightMotorControl = new edu.wpi.first.wpilibj.Victor(1);
-	edu.wpi.first.wpilibj.Victor backRightMotorControl = new edu.wpi.first.wpilibj.Victor(2);
-	edu.wpi.first.wpilibj.Victor backLeftMotorControl = new edu.wpi.first.wpilibj.Victor(3);
-	edu.wpi.first.wpilibj.Victor frontLeftMotorControl = new edu.wpi.first.wpilibj.Victor(4);
-	edu.wpi.first.wpilibj.RobotDrive robotDrive = new edu.wpi.first.wpilibj.RobotDrive(frontLeftMotorControl, backLeftMotorControl, frontRightMotorControl, backRightMotorControl);
-	edu.wpi.first.wpilibj.Encoder encoder = new edu.wpi.first.wpilibj.Encoder(1, 2);
-	edu.wpi.first.wpilibj.DigitalInput limitSwitch = new edu.wpi.first.wpilibj.DigitalInput(5);
-	edu.wpi.first.wpilibj.smartdashboard.SmartDashboard SmartDash = new edu.wpi.first.wpilibj.smartdashboard.SmartDashboard();
+	//Joy sticks
+		edu.wpi.first.wpilibj.Joystick joystick = new edu.wpi.first.wpilibj.Joystick(0);
+	
+	//Drive Base
+		edu.wpi.first.wpilibj.Victor frontRightMotorControl = new edu.wpi.first.wpilibj.Victor(1);
+		edu.wpi.first.wpilibj.Victor backRightMotorControl = new edu.wpi.first.wpilibj.Victor(2);
+		edu.wpi.first.wpilibj.Victor backLeftMotorControl = new edu.wpi.first.wpilibj.Victor(3);
+		edu.wpi.first.wpilibj.Victor frontLeftMotorControl = new edu.wpi.first.wpilibj.Victor(4);
+		edu.wpi.first.wpilibj.RobotDrive robotDrive = new edu.wpi.first.wpilibj.RobotDrive(frontLeftMotorControl, backLeftMotorControl, frontRightMotorControl, backRightMotorControl);
+	
+	//Encoder
+		edu.wpi.first.wpilibj.Encoder encoderRight = new edu.wpi.first.wpilibj.Encoder(4, 3);
+		edu.wpi.first.wpilibj.Encoder encoderLeft = new edu.wpi.first.wpilibj.Encoder(8, 9);
+	
+	//Switches and sensors
+		edu.wpi.first.wpilibj.DigitalInput limitSwitch = new edu.wpi.first.wpilibj.DigitalInput(5);
+		
+	//Camera
+		//edu.wpi.first.wpilibj.vision.AxisCamera camera = new edu.wpi.first.wpilibj.vision.AxisCamera("10.44.61.11");
+	
+	//Miscellaneous
+		edu.wpi.first.wpilibj.smartdashboard.SmartDashboard SmartDash = new edu.wpi.first.wpilibj.smartdashboard.SmartDashboard();
+		private int mode = 1;
+		private SendableChooser autoSwitch;
 	
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
-    	encoder.setDistancePerPulse(0.02528445);
-    	encoder.setReverseDirection(true);
-    	SmartDash.putInt("RoutineSwitch", 1);
+    	//Encoder
+    		encoderRight.setDistancePerPulse(0.006135923);
+    		encoderRight.setReverseDirection(true);
+    		encoderLeft.setDistancePerPulse(0.006135923);
+		//Smartdashboard
+    		//SmartDashboard.putNumber("Autonomous Routines: ", mode);
+    		autoSwitch = new SendableChooser();
+    		autoSwitch.addDefault("Routine One", 1);
+    		autoSwitch.addObject("Routine Two", 2);
+    		autoSwitch.addObject("Auto States Test", 3);
+    		SmartDashboard.putData("Autonomous Routines", autoSwitch);
+    
+    	//edu.wpi.first.wpilibj.CameraServer.getInstance().
     }
-
+    public void autonomousInit() {
+    	//SmartDashboard.getNumber("Autonomous Routines: ");
+    	mode = (int) autoSwitch.getSelected();
+    }
     /**
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
+    	switch (mode) {
+    	case 1:
+    	{
+    		RoutineOnePeriodic();
+    	}
+    	break;
+    	case 2:
+    	{
+    		RoutineTwo();
+    	}
+    	break;
+    	case 3:
+    	{
+    		AutoStates();
+    	}
+    	}
+    	
+    }
+    public void AutoStates() {
     	if (limitSwitch.get() == false) {
     		this.state = AutonomousStates.stopTerminate;
     	} 
     	switch (this.state) {
     	case AutoStart:
     	{
-    		encoder.reset();
+    		encoderRight.reset();
+    		encoderLeft.reset();
     		this.state = AutonomousStates.forward;
     	}
     		break;
     	case forward:
     	{
-    		if (encoder.getDistance() >= 60) {
-    			encoder.reset();
+    		if (encoderRight.getDistance() >= 60) {
+    			encoderRight.reset();
+    			encoderLeft.reset();
     			this.state = AutonomousStates.stop1;
     			
     		}
     		robotDrive.drive(0.2, 0.0);
-    		System.out.println(encoder.get());
+    		System.out.println(encoderRight.get() + "  |  " + encoderLeft.get());
 
     	}
     		break;
@@ -95,24 +151,64 @@ public class Robot extends IterativeRobot {
     	}
     		break;
     	}
-
-    }
+		
+    } 
 
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
         robotDrive.arcadeDrive(joystick);
-    }
+      /*  RGBImage colours = null;
+		try {
+			colours = new RGBImage();
+		} catch (NIVisionException e) {
+			e.printStackTrace();
+		}
+        camera.getImage(colours);
+        try {
+			colours.getBluePlane();
+		} catch (NIVisionException e) {
+			e.printStackTrace();
+		}
+
+        edu.wpi.first.wpilibj.CameraServer.getInstance().setImage(colours.image); */
+    } 
+    /**
+     * This function tells the robot to move forward during Autonomous. 
+     * Used within the switch code for Autonomous for a specified speed
+     */
     void MoveForward() {
     	robotDrive.drive(0.7, 0.0);
     }
+    /**
+     * This function tells the robot to move backwards during Autonomous.
+     *  Used within the switch code for Autonomous for a specified speed
+     */
     void MoveBack() {
     	robotDrive.arcadeDrive(-0.7, 0.0);
     }
+    /**
+     * This function tells the robot to turn left during Autonomous.
+     * Used within the switch code for Autonomous for a specified
+     * curve vector
+     */
     void TurnLeft() {
     	robotDrive.drive(0.2, 0.2);
     }
+    /**
+     * This function tells the robot to turn right during Autonomous.
+     * Used within the switch code for Autonomous for a specified
+     * curve vector
+     */
+    void TurnRight() {
+    	robotDrive.drive(0.2, -0.2);
+    }
+    /**
+     * This function tells the robot to stop the motors from running
+     * during Autonomous. Used within the switch code for safety
+     * precautions for the motors
+     */
     void Stop() {
     	robotDrive.drive(0.0, 0.0);
     }
@@ -127,26 +223,29 @@ public class Robot extends IterativeRobot {
     	switch(this.state2) {
     	case AutoStart:
     	{
-    		encoder.reset();
+    		encoderRight.reset();
+    		encoderLeft.reset();
     		this.state2 = RoutineOne.Lift1;
     	}
 		break;
 
     	case Lift1:
     	{
-    		encoder.reset();
+    		encoderRight.reset();
+    		encoderLeft.reset();
     		this.state2 = RoutineOne.MoveBack1;
     	}
 		break;
 
     	case MoveBack1:
     	{
-    		if(encoder.getDistance() <= -24) {
-        		encoder.reset();
+    		if(encoderRight.getDistance() <= -24) {
+        		encoderRight.reset();
+        		encoderLeft.reset();
         		this.state2 = RoutineOne.stop1;
     		} else {
     			MoveBack();
-    			System.out.println(encoder.getDistance());
+    			System.out.println(encoderRight.getDistance() + "  |  " + encoderLeft.getDistance());
     		}
     	}
 		break;
@@ -154,24 +253,30 @@ public class Robot extends IterativeRobot {
     	case stop1:
     	{
     		Stop();
-    		encoder.reset();
+    		encoderRight.reset();
+    		encoderLeft.reset();
 
     		this.state2 = RoutineOne.TurnRight1;
     	}
 		break;
 
     	case TurnRight1:
-    	{
-    		encoder.reset();
-
-    		this.state2 = RoutineOne.MoveForward1;
+    	{		
+    		if (encoderLeft.getDistance() >= 17.8678082) {
+    			encoderRight.reset();
+        		encoderLeft.reset();
+        		this.state2 = RoutineOne.MoveForward1;
+    		} else {
+    			TurnRight();
+    	}
     	}
 		break;
 
     	case MoveForward1:
     	{
-    		if (encoder.getDistance() >= 93) {
-        		encoder.reset();
+    		if (encoderRight.getDistance() >= 93) {
+        		encoderRight.reset();
+        		encoderLeft.reset();
         		this.state2 = RoutineOne.stop2;
     		} else {
     			MoveForward();
@@ -182,7 +287,8 @@ public class Robot extends IterativeRobot {
     	case stop2:
     	{
     		Stop();
-    		encoder.reset();
+    		encoderRight.reset();
+    		encoderLeft.reset();
 
     		this.state2 = RoutineOne.TurnLeft1;
     	}
@@ -190,19 +296,21 @@ public class Robot extends IterativeRobot {
 
     	case TurnLeft1:
     	{
-    		if (encoder.getDistance() >= 10) {
-        		encoder.reset();
+    		if (encoderRight.getDistance() >= 17.8678082) {
+        		encoderRight.reset();
+        		encoderLeft.reset();
         		this.state2 = RoutineOne.MoveForward2;
     		} else {
     			TurnLeft();
-    	}
+    	} 
     	}
 		break;
 
     	case MoveForward2:
     	{
-    		if (encoder.getDistance() >= 24) {
-        		encoder.reset();
+    		if (encoderRight.getDistance() >= 24) {
+        		encoderRight.reset();
+        		encoderLeft.reset();
         		this.state2 = RoutineOne.stop3;
     		} else {
     			MoveForward();
@@ -213,7 +321,8 @@ public class Robot extends IterativeRobot {
     	case stop3:
     	{
     		Stop();
-    		encoder.reset();
+    		encoderRight.reset();
+    		encoderLeft.reset();
 
     		this.state2 = RoutineOne.Lift2;
     	}
@@ -221,16 +330,17 @@ public class Robot extends IterativeRobot {
 
     	case Lift2:
     	{
-    		encoder.reset();
-
+    		encoderRight.reset();
+    		encoderLeft.reset();
     		this.state2 = RoutineOne.MoveBack2;
     	}
 		break;
 
     	case MoveBack2:
     	{
-    		if(encoder.getDistance() <= -24) {
-        		encoder.reset();
+    		if(encoderRight.getDistance() <= -24) {
+        		encoderRight.reset();
+        		encoderLeft.reset();
         		this.state2 = RoutineOne.stop4;
     		} else {
     			MoveBack();
@@ -241,24 +351,28 @@ public class Robot extends IterativeRobot {
     	case stop4:
     	{
     		Stop();
-    		encoder.reset();
-
+    		encoderRight.reset();
+    		encoderLeft.reset();
     		this.state2 = RoutineOne.TurnRight2;
     	}
 		break;
 
     	case TurnRight2:
     	{
-    		encoder.reset();
-
-    		this.state2 = RoutineOne.MoveForward3;
-    	}
+    		if (encoderLeft.getDistance() >= 17.8678082) {
+        		encoderRight.reset();
+        		encoderLeft.reset();
+        		this.state2 = RoutineOne.MoveForward3;
+    		} else {
+    			TurnRight();
+    	}    	}
 		break;
 
     	case MoveForward3:
     	{
-    		if (encoder.getDistance() >= 93) {
-        		encoder.reset();
+    		if (encoderRight.getDistance() >= 93) {
+        		encoderRight.reset();
+        		encoderLeft.reset();
         		this.state2 = RoutineOne.stop5;
     		} else {
     			MoveForward();
@@ -269,7 +383,8 @@ public class Robot extends IterativeRobot {
     	case stop5:
     	{
     		Stop();
-    		encoder.reset();
+    		encoderRight.reset();
+    		encoderLeft.reset();
 
     		this.state2 = RoutineOne.TurnLeft2;
     	}
@@ -277,8 +392,9 @@ public class Robot extends IterativeRobot {
 
     	case TurnLeft2:
     	{
-    		if (encoder.getDistance() >= 10) {
-        		encoder.reset();
+    		if (encoderRight.getDistance() >= 17.8678082) {
+        		encoderRight.reset();
+        		encoderLeft.reset();
         		this.state2 = RoutineOne.MoveForward4;
     		} else {
     			TurnLeft();
@@ -288,8 +404,9 @@ public class Robot extends IterativeRobot {
 
     	case MoveForward4:
     	{
-    		if (encoder.getDistance() >= 24) {
-        		encoder.reset();
+    		if (encoderRight.getDistance() >= 24) {
+        		encoderRight.reset();
+        		encoderLeft.reset();
         		this.state2 = RoutineOne.Lift3;
     		} else {
     			MoveForward();
@@ -299,16 +416,17 @@ public class Robot extends IterativeRobot {
 
     	case Lift3:
     	{
-    		encoder.reset();
-
+    		encoderRight.reset();
+    		encoderLeft.reset();
     		this.state2 = RoutineOne.MoveBackCenter;
     	}
 		break;
 
     	case MoveBackCenter:
     	{
-    		if (encoder.getDistance() <= -105) {
-        		encoder.reset();
+    		if (encoderRight.getDistance() <= -105) {
+        		encoderRight.reset();
+        		encoderLeft.reset();
         		this.state2 = RoutineOne.stop6;
     		} else {
     			MoveBack();
@@ -319,22 +437,25 @@ public class Robot extends IterativeRobot {
     	case stop6:
     	{
     		Stop();
-    		encoder.reset();
+    		encoderRight.reset();
+    		encoderLeft.reset();
     		this.state2 = RoutineOne.Drop;
     	}
 		break;
 
     	case Drop:
     	{
-    		encoder.reset();
+    		encoderRight.reset();
+    		encoderLeft.reset();
     		this.state2 = RoutineOne.MoveBackSafety;
     	}
 		break;
 
     	case MoveBackSafety:
     	{
-    		if (encoder.getDistance() <= -12) {
-        		encoder.reset();
+    		if (encoderRight.getDistance() <= -12) {
+        		encoderRight.reset();
+        		encoderLeft.reset();
         		this.state2 = RoutineOne.TerminateStop;
     		} else {
     			MoveBack();
@@ -354,15 +475,17 @@ public class Robot extends IterativeRobot {
     	switch (this.state3) {
     	case AutoStart:
     	{
-    		encoder.reset();
+    		encoderRight.reset();
+    		encoderLeft.reset();
     		this.state3 = RoutineTwo.forward;
     	}
     	break;
     	case forward:
     	{
     		MoveForward();
-    		if (encoder.getDistance() >= 12) {
-    			encoder.reset();
+    		if (encoderRight.getDistance() >= 12) {
+    			encoderRight.reset();
+    			encoderLeft.reset();
     			this.state3 = RoutineTwo.stop;
     		}
     	}
