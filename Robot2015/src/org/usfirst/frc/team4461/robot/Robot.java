@@ -1,9 +1,6 @@
 package org.usfirst.frc.team4461.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
-//import edu.wpi.first.wpilibj.image.ColorImage;
-//import edu.wpi.first.wpilibj.image.NIVisionException;
-//import edu.wpi.first.wpilibj.image.RGBImage;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -60,6 +57,7 @@ public class Robot extends IterativeRobot {
 		edu.wpi.first.wpilibj.smartdashboard.SmartDashboard SmartDash = new edu.wpi.first.wpilibj.smartdashboard.SmartDashboard();
 		private int mode = 1;
 		private SendableChooser autoSwitch;
+		public static boolean Lift = false;
 		LiftCommand CommandLift;
 	
     /**
@@ -212,9 +210,12 @@ public class Robot extends IterativeRobot {
 
     	case Lift1:
     	{
-    		encoderRight.reset();
-    		encoderLeft.reset();
-    		this.state1 = RoutineOne.MoveBack1;
+    		CommandLift.ExecutePeriodic(true, 13);
+    		if(Lift) {
+    			encoderRight.reset();
+    			encoderLeft.reset();
+    			this.state1 = RoutineOne.MoveBack1;
+    		}
     	}
 		break;
 
@@ -311,9 +312,12 @@ public class Robot extends IterativeRobot {
 
     	case Lift2:
     	{
-    		encoderRight.reset();
-    		encoderLeft.reset();
-    		this.state1 = RoutineOne.MoveBack2;
+    		CommandLift.ExecutePeriodic(false, 13);
+    		if(Lift) {
+    			encoderRight.reset();
+    			encoderLeft.reset();
+    			this.state1 = RoutineOne.MoveBack2;
+    		}
     	}
 		break;
 
@@ -397,9 +401,12 @@ public class Robot extends IterativeRobot {
 
     	case Lift3:
     	{
-    		encoderRight.reset();
-    		encoderLeft.reset();
-    		this.state1 = RoutineOne.MoveBackCenter;
+    		CommandLift.ExecutePeriodic(false, 13);
+    		if(Lift) {
+    			encoderRight.reset();
+    			encoderLeft.reset();
+    			this.state1 = RoutineOne.MoveBackCenter;
+    		}
     	}
 		break;
 
@@ -426,9 +433,11 @@ public class Robot extends IterativeRobot {
 
     	case Drop:
     	{
-    		encoderRight.reset();
-    		encoderLeft.reset();
-    		this.state1 = RoutineOne.MoveBackSafety;
+    		CommandLift.Drop();
+    		if(Lift) {
+    			EncoderReset();
+    			this.state1 = RoutineOne.MoveBackSafety;
+    		}
     	}
 		break;
 
@@ -462,8 +471,12 @@ public class Robot extends IterativeRobot {
     	break;
     	case R2Lift1:
     	{
-    		EncoderReset();
-    		this.state2 = RoutineTwo.R2MoveBack1;
+    		CommandLift.ExecutePeriodic(true, 13);
+    		if(Lift) {
+    			encoderRight.reset();
+    			encoderLeft.reset();
+    			this.state2 = RoutineTwo.R2MoveBack1;
+    		}
     	}
     	break;
     	
@@ -537,19 +550,17 @@ public class Robot extends IterativeRobot {
     	{
     		Stop();
     		EncoderReset();
-    		this.state2 = RoutineTwo.R2GrabAndStack;
-    	}
-    	break;
-    	case R2GrabAndStack:
-    	{
-    		EncoderReset();
     		this.state2 = RoutineTwo.R2Lift2;
     	}
     	break;
     	case R2Lift2:
     	{
-    		EncoderReset();
-    		this.state2 = RoutineTwo.R2MoveBack2;
+    		CommandLift.ExecutePeriodic(false, 13);
+    		if(Lift) {
+    			encoderRight.reset();
+    			encoderLeft.reset();
+    			this.state2 = RoutineTwo.R2MoveBack2;
+    		}
     	}
     	break;
     	case R2MoveBack2:
@@ -571,8 +582,11 @@ public class Robot extends IterativeRobot {
     	break;
     	case R2Drop:
     	{
-    		EncoderReset();
-    		this.state2 = RoutineTwo.R2MoveBack3;
+    		CommandLift.Drop();
+    		if(Lift) {
+    			EncoderReset();
+    			this.state2 = RoutineTwo.R2MoveBack3;
+    		}
     	}
     	break;
     	case R2MoveBack3:
@@ -602,8 +616,12 @@ public class Robot extends IterativeRobot {
     	break;
     	case Lift1:
     	{
-    		EncoderReset();
-    		this.state3 = RoutineThree.MoveBack1;
+    		CommandLift.ExecutePeriodic(true, 13);
+    		if(Lift) {
+    			encoderRight.reset();
+    			encoderLeft.reset();
+    			this.state3 = RoutineThree.MoveBack1;
+    		}
     	}
     	break;
     	case MoveBack1:
@@ -680,22 +698,18 @@ public class Robot extends IterativeRobot {
     	{
     		Stop();
     		EncoderReset();
-    		this.state3 = RoutineThree.GrabAndStack;
-
-    	}
-    	break;
-    	case GrabAndStack:
-    	{
-    		EncoderReset();
     		this.state3 = RoutineThree.Lift2;
 
     	}
     	break;
     	case Lift2:
     	{
-    		EncoderReset();
-    		this.state3 = RoutineThree.MoveBack2;
-
+    		CommandLift.ExecutePeriodic(false, 13);
+    		if(Lift) {
+    			encoderRight.reset();
+    			encoderLeft.reset();
+    			this.state3 = RoutineThree.MoveBack2;
+    		}
     	}
     	break;
     	case MoveBack2:
@@ -719,9 +733,11 @@ public class Robot extends IterativeRobot {
     	break;
     	case Drop:
     	{
-    		EncoderReset();
-    		this.state3 = RoutineThree.MoveBack3;
-
+    		CommandLift.Drop();
+    		if(Lift) {
+    			EncoderReset();
+    			this.state3 = RoutineThree.MoveBack3;
+    		}
     	}
     	break;
     	case MoveBack3:
@@ -752,8 +768,12 @@ public class Robot extends IterativeRobot {
     	break;
     	case Lift:
     	{
-    		EncoderReset();
-    		this.state4 = RoutineFour.MoveBack1;
+    		CommandLift.ExecutePeriodic(true, 13);
+    		if(Lift) {
+    			encoderRight.reset();
+    			encoderLeft.reset();
+    			this.state4 = RoutineFour.MoveBack1;
+    		}
     	}
     	break;
     	case MoveBack1:
@@ -770,8 +790,11 @@ public class Robot extends IterativeRobot {
     	break;
     	case Drop:
     	{
-    		EncoderReset();
-    		this.state4 = RoutineFour.MoveBack2;
+    		CommandLift.Drop();
+    		if(Lift) {
+    			EncoderReset();
+    			this.state4 = RoutineFour.MoveBack2;
+    		}
     	}
     	break;
     	case MoveBack2:
@@ -798,8 +821,12 @@ public class Robot extends IterativeRobot {
     	break;
     	case Lift:
     	{
-    		EncoderReset();
-    		this.state5 = RoutineFive.MoveBack1;
+    		CommandLift.ExecutePeriodic(true, 13);
+    		if(Lift) {
+    			encoderRight.reset();
+    			encoderLeft.reset();
+    			this.state5 = RoutineFive.MoveBack1;
+    		}
     	}
     	break;
     	case MoveBack1:
@@ -869,19 +896,17 @@ public class Robot extends IterativeRobot {
     	{
     		Stop();
     		EncoderReset();
-    		this.state5 = RoutineFive.Stack;
+    		this.state5 = RoutineFive.Lift2;
     	}
     	break;
-    	case Stack:
+    	case Lift2:
     	{
-    		EncoderReset();
-    		this.state5 = RoutineFive.Grab;
-    	}
-    	break;
-    	case Grab:
-    	{
-    		EncoderReset();
-    		this.state5 = RoutineFive.MoveBack2;
+    		CommandLift.ExecutePeriodic(false, 13);
+    		if(Lift) {
+    			encoderRight.reset();
+    			encoderLeft.reset();
+    			this.state5 = RoutineFive.MoveBack2;
+    		}
     	}
     	break;
     	case MoveBack2:
@@ -903,8 +928,11 @@ public class Robot extends IterativeRobot {
     	break;
     	case Drop:
     	{
-    		EncoderReset();
-    		this.state5 = RoutineFive.MoveBack3;
+    		CommandLift.Drop();
+    		if(Lift) {
+    			EncoderReset();
+    			this.state5 = RoutineFive.MoveBack3;
+    		}
     	}
     	break;
     	case MoveBack3:
@@ -982,8 +1010,12 @@ public class Robot extends IterativeRobot {
     	break;
     	case Lift1:
     	{
-    		EncoderReset();
-    		this.state8 = RoutineEight.reverse1;
+    		CommandLift.ExecutePeriodic(true, 13);
+    		if(Lift) {
+    			encoderRight.reset();
+    			encoderLeft.reset();
+    			this.state8 = RoutineEight.reverse1;
+    		}
     	}
     	break;
     	case reverse1:
@@ -1059,8 +1091,12 @@ public class Robot extends IterativeRobot {
     	break;
     	case Lift2:
     	{
-    		EncoderReset();
-    		this.state8 = RoutineEight.reverse2;
+    		CommandLift.ExecutePeriodic(false, 13);
+    		if(Lift) {
+    			encoderRight.reset();
+    			encoderLeft.reset();
+    			this.state8 = RoutineEight.reverse2;
+    		}
     	}
     	break;
     	case reverse2:
@@ -1136,8 +1172,12 @@ public class Robot extends IterativeRobot {
     	break;
     	case Lift3:
     	{
-    		EncoderReset();
-    		this.state8 = RoutineEight.reverse3;
+    		CommandLift.ExecutePeriodic(false, 13);
+    		if(Lift) {
+    			encoderRight.reset();
+    			encoderLeft.reset();
+    			this.state8 = RoutineEight.reverse3;
+    		}
     	}
     	break;
     	case reverse3:
@@ -1159,8 +1199,11 @@ public class Robot extends IterativeRobot {
     	break;
     	case Drop:
     	{
-    		EncoderReset();
-    		this.state8 = RoutineEight.reverse4;
+    		CommandLift.Drop();
+    		if(Lift) {
+    			EncoderReset();
+    			this.state8 = RoutineEight.reverse4;
+    		}
     	}
     	break;
     	case reverse4:

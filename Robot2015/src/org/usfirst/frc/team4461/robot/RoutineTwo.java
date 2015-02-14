@@ -4,7 +4,6 @@ public enum RoutineTwo {
 	AutoStart,
 	R2Lift1,
 	R2Lift2,
-	R2GrabAndStack,
 	R2Drop,
 	R2MoveBack1,
 	R2MoveBack2,

@@ -4,7 +4,6 @@ public enum RoutineThree {
 	AutoStart,
 	Lift1,
 	Lift2,
-	GrabAndStack,
 	Drop,
 	MoveBack1,
 	MoveBack2,

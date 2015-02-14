@@ -3,8 +3,7 @@ package org.usfirst.frc.team4461.robot;
 public enum RoutineFive {
 	AutoStart,
 	Lift,
-	Stack,
-	Grab,
+	Lift2,
 	Drop,
 	MoveBack1,
 	MoveBack2,
