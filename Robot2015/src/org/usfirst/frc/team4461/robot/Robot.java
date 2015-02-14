@@ -1,0 +1,1155 @@
+package org.usfirst.frc.team4461.robot;
+
+import edu.wpi.first.wpilibj.IterativeRobot;
+//import edu.wpi.first.wpilibj.image.ColorImage;
+//import edu.wpi.first.wpilibj.image.NIVisionException;
+//import edu.wpi.first.wpilibj.image.RGBImage;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+/**
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to each mode, as described in the IterativeRobot
+ * documentation. If you change the name of this class or the package after
+ * creating this project, you must also update the manifest file in the resource
+ * directory.
+ */
+public class Robot extends IterativeRobot {
+	//Routines
+		RoutineOne state1 = RoutineOne.AutoStart;
+		RoutineTwo state2 = RoutineTwo.AutoStart;
+		RoutineThree state3 = RoutineThree.AutoStart;
+		RoutineFour state4 = RoutineFour.AutoStart;
+		RoutineFive state5 = RoutineFive.AutoStart;
+		RoutineSix state6 = RoutineSix.AutoStart;
+		RoutineSeven state7 = RoutineSeven.AutoStart;
+		RoutineEight state8 = RoutineEight.AutoStart;
+	
+	//Timer
+		int timeForward1 = 0;
+		int timeTurning = 0;
+		int timeForward2 = 0;
+	
+	//Joy sticks
+		edu.wpi.first.wpilibj.Joystick joystick = new edu.wpi.first.wpilibj.Joystick(0);
+	
+	//Drive Base
+		edu.wpi.first.wpilibj.Victor frontRightMotorControl = new edu.wpi.first.wpilibj.Victor(1);
+		edu.wpi.first.wpilibj.Victor backRightMotorControl = new edu.wpi.first.wpilibj.Victor(2);
+		edu.wpi.first.wpilibj.Victor backLeftMotorControl = new edu.wpi.first.wpilibj.Victor(3);
+		edu.wpi.first.wpilibj.Victor frontLeftMotorControl = new edu.wpi.first.wpilibj.Victor(4);
+		edu.wpi.first.wpilibj.RobotDrive robotDrive = new edu.wpi.first.wpilibj.RobotDrive(frontLeftMotorControl, backLeftMotorControl, frontRightMotorControl, backRightMotorControl);
+	
+	//Encoder
+		edu.wpi.first.wpilibj.Encoder encoderRight = new edu.wpi.first.wpilibj.Encoder(4, 3);
+		edu.wpi.first.wpilibj.Encoder encoderLeft = new edu.wpi.first.wpilibj.Encoder(8, 9);
+	
+	//Switches and sensors
+		edu.wpi.first.wpilibj.DigitalInput limitSwitch = new edu.wpi.first.wpilibj.DigitalInput(5);
+		
+	//Camera
+		//edu.wpi.first.wpilibj.vision.AxisCamera camera = new edu.wpi.first.wpilibj.vision.AxisCamera("10.44.61.11");
+	
+	//Miscellaneous
+		edu.wpi.first.wpilibj.smartdashboard.SmartDashboard SmartDash = new edu.wpi.first.wpilibj.smartdashboard.SmartDashboard();
+		private int mode = 1;
+		private SendableChooser autoSwitch;
+	
+    /**
+     * This function is run when the robot is first started up and should be
+     * used for any initialization code.
+     */
+    public void robotInit() {
+    	//Encoder
+    		encoderRight.setDistancePerPulse(0.006135923);
+    		encoderRight.setReverseDirection(true);
+    		encoderLeft.setDistancePerPulse(0.006135923);
+		//Smartdashboard
+    		//SmartDashboard.putNumber("Autonomous Routines: ", mode);
+    		autoSwitch = new SendableChooser();
+    		autoSwitch.addDefault("Routine One", 1);
+    		autoSwitch.addObject("Routine Two", 2);
+    		autoSwitch.addObject("Routine Three", 3);
+    		autoSwitch.addObject("Routine Four", 4);
+    		autoSwitch.addObject("Routine Five", 5);
+    		autoSwitch.addObject("Routine Six", 6);
+    		autoSwitch.addObject("Routine Seven", 7);
+    		autoSwitch.addObject("Routine Eight", 8);
+    		SmartDashboard.putData("Autonomous Routines", autoSwitch);
+    
+    	//edu.wpi.first.wpilibj.CameraServer.getInstance().
+    }
+    public void autonomousInit() {
+    	//SmartDashboard.getNumber("Autonomous Routines: ");
+    	mode = (int) autoSwitch.getSelected();
+    }
+    /**
+     * This function is called periodically during autonomous
+     */
+    public void autonomousPeriodic() {
+    	switch (mode) {
+    	case 1:
+    	{
+    		RoutineOnePeriodic();
+    	}
+    	break;
+    	case 2:
+    	{
+    		RoutineTwoPeriodic();
+    	}
+    	break;
+    	}
+    	
+    }
+
+    /**
+     * This function is called periodically during operator control
+     */
+    public void teleopPeriodic() {
+        robotDrive.arcadeDrive(joystick);
+      /*  RGBImage colours = null;
+		try {
+			colours = new RGBImage();
+		} catch (NIVisionException e) {
+			e.printStackTrace();
+		}
+        camera.getImage(colours);
+        try {
+			colours.getBluePlane();
+		} catch (NIVisionException e) {
+			e.printStackTrace();
+		}
+        edu.wpi.first.wpilibj.CameraServer.getInstance().setImage(colours.image); */
+    } 
+    /**
+     * This function tells the robot to move forward during Autonomous. 
+     * Used within the switch code for Autonomous for a specified speed
+     */
+    void MoveForward() {
+    	robotDrive.drive(0.7, 0.0);
+    }
+    /**
+     * This function tells the robot to move backwards during Autonomous.
+     *  Used within the switch code for Autonomous for a specified speed
+     */
+    void MoveBack() {
+    	robotDrive.drive(-0.7, 0.0);
+    }
+    /**
+     * This function tells the robot to turn left during Autonomous.
+     * Used within the switch code for Autonomous for a specified
+     * curve vector
+     */
+    void TurnLeft() {
+    	robotDrive.drive(0.2, 0.2);
+    }
+    /**
+     * This function tells the robot to turn right during Autonomous.
+     * Used within the switch code for Autonomous for a specified
+     * curve vector
+     */
+    void TurnRight() {
+    	robotDrive.drive(0.2, -0.2);
+    }
+    /**
+     * This function tells the robot to stop the motors from running
+     * during Autonomous. Used within the switch code for safety
+     * precautions for the motors
+     */
+    void Stop() {
+    	robotDrive.drive(0.0, 0.0);
+    }
+    
+    void EncoderReset() {
+    	encoderRight.reset();
+    	encoderLeft.reset();
+    }
+    
+    /**
+     * This function is called periodically during test mode
+     */
+    public void RoutineOnePeriodic() {
+    	if (limitSwitch.get() == false) {
+    		this.state1 = RoutineOne.TerminateStop;
+    	}
+    	switch(this.state1) {
+    	case AutoStart:
+    	{
+    		encoderRight.reset();
+    		encoderLeft.reset();
+    		this.state1 = RoutineOne.Lift1;
+    	}
+		break;
+
+    	case Lift1:
+    	{
+    		encoderRight.reset();
+    		encoderLeft.reset();
+    		this.state1 = RoutineOne.MoveBack1;
+    	}
+		break;
+
+    	case MoveBack1:
+    	{
+    		if(encoderRight.getDistance() <= -24) {
+        		encoderRight.reset();
+        		encoderLeft.reset();
+        		this.state1 = RoutineOne.stop1;
+    		} else {
+    			MoveBack();
+    			System.out.println(encoderRight.getDistance() + "  |  " + encoderLeft.getDistance());
+    		}
+    	}
+		break;
+
+    	case stop1:
+    	{
+    		Stop();
+    		encoderRight.reset();
+    		encoderLeft.reset();
+
+    		this.state1 = RoutineOne.TurnRight1;
+    	}
+		break;
+
+    	case TurnRight1:
+    	{		
+    		if (encoderLeft.getDistance() >= 17.8678082) {
+    			encoderRight.reset();
+        		encoderLeft.reset();
+        		this.state1 = RoutineOne.MoveForward1;
+    		} else {
+    			TurnRight();
+    	}
+    	}
+		break;
+
+    	case MoveForward1:
+    	{
+    		if (encoderRight.getDistance() >= 93) {
+        		encoderRight.reset();
+        		encoderLeft.reset();
+        		this.state1 = RoutineOne.stop2;
+    		} else {
+    			MoveForward();
+    		}
+    	}
+    	break;
+    	
+    	case stop2:
+    	{
+    		Stop();
+    		encoderRight.reset();
+    		encoderLeft.reset();
+
+    		this.state1 = RoutineOne.TurnLeft1;
+    	}
+		break;
+
+    	case TurnLeft1:
+    	{
+    		if (encoderRight.getDistance() >= 17.8678082) {
+        		encoderRight.reset();
+        		encoderLeft.reset();
+        		this.state1 = RoutineOne.MoveForward2;
+    		} else {
+    			TurnLeft();
+    	} 
+    	}
+		break;
+
+    	case MoveForward2:
+    	{
+    		if (encoderRight.getDistance() >= 24) {
+        		encoderRight.reset();
+        		encoderLeft.reset();
+        		this.state1 = RoutineOne.stop3;
+    		} else {
+    			MoveForward();
+    		}
+    	}
+		break;
+
+    	case stop3:
+    	{
+    		Stop();
+    		encoderRight.reset();
+    		encoderLeft.reset();
+
+    		this.state1 = RoutineOne.Lift2;
+    	}
+		break;
+
+    	case Lift2:
+    	{
+    		encoderRight.reset();
+    		encoderLeft.reset();
+    		this.state1 = RoutineOne.MoveBack2;
+    	}
+		break;
+
+    	case MoveBack2:
+    	{
+    		if(encoderRight.getDistance() <= -24) {
+        		encoderRight.reset();
+        		encoderLeft.reset();
+        		this.state1 = RoutineOne.stop4;
+    		} else {
+    			MoveBack();
+    		}
+    	}
+		break;
+
+    	case stop4:
+    	{
+    		Stop();
+    		encoderRight.reset();
+    		encoderLeft.reset();
+    		this.state1 = RoutineOne.TurnRight2;
+    	}
+		break;
+
+    	case TurnRight2:
+    	{
+    		if (encoderLeft.getDistance() >= 17.8678082) {
+        		encoderRight.reset();
+        		encoderLeft.reset();
+        		this.state1 = RoutineOne.MoveForward3;
+    		} else {
+    			TurnRight();
+    	}    	}
+		break;
+
+    	case MoveForward3:
+    	{
+    		if (encoderRight.getDistance() >= 93) {
+        		encoderRight.reset();
+        		encoderLeft.reset();
+        		this.state1 = RoutineOne.stop5;
+    		} else {
+    			MoveForward();
+    		}
+    	}
+		break;
+
+    	case stop5:
+    	{
+    		Stop();
+    		encoderRight.reset();
+    		encoderLeft.reset();
+
+    		this.state1 = RoutineOne.TurnLeft2;
+    	}
+		break;
+
+    	case TurnLeft2:
+    	{
+    		if (encoderRight.getDistance() >= 17.8678082) {
+        		encoderRight.reset();
+        		encoderLeft.reset();
+        		this.state1 = RoutineOne.MoveForward4;
+    		} else {
+    			TurnLeft();
+    		}
+    	}
+		break;
+
+    	case MoveForward4:
+    	{
+    		if (encoderRight.getDistance() >= 24) {
+        		encoderRight.reset();
+        		encoderLeft.reset();
+        		this.state1 = RoutineOne.Lift3;
+    		} else {
+    			MoveForward();
+    		}
+    	}
+		break;
+
+    	case Lift3:
+    	{
+    		encoderRight.reset();
+    		encoderLeft.reset();
+    		this.state1 = RoutineOne.MoveBackCenter;
+    	}
+		break;
+
+    	case MoveBackCenter:
+    	{
+    		if (encoderRight.getDistance() <= -105) {
+        		encoderRight.reset();
+        		encoderLeft.reset();
+        		this.state1 = RoutineOne.stop6;
+    		} else {
+    			MoveBack();
+    		}
+    	}
+		break;
+
+    	case stop6:
+    	{
+    		Stop();
+    		encoderRight.reset();
+    		encoderLeft.reset();
+    		this.state1 = RoutineOne.Drop;
+    	}
+		break;
+
+    	case Drop:
+    	{
+    		encoderRight.reset();
+    		encoderLeft.reset();
+    		this.state1 = RoutineOne.MoveBackSafety;
+    	}
+		break;
+
+    	case MoveBackSafety:
+    	{
+    		if (encoderRight.getDistance() <= -12) {
+        		encoderRight.reset();
+        		encoderLeft.reset();
+        		this.state1 = RoutineOne.TerminateStop;
+    		} else {
+    			MoveBack();
+    		}
+    	}
+		break;
+
+    	case TerminateStop:
+    	{
+    		Stop();
+    	}
+		break;
+
+    	}
+    }
+    public void RoutineTwoPeriodic() {
+    	switch(this.state2) {
+    	case AutoStart:
+    	{
+    		EncoderReset();
+    		this.state2 = RoutineTwo.R2Lift1;
+    	}
+    	break;
+    	case R2Lift1:
+    	{
+    		EncoderReset();
+    		this.state2 = RoutineTwo.R2MoveBack1;
+    	}
+    	break;
+    	
+    	case R2MoveBack1:
+    	{
+    		if(encoderRight.getDistance() <= -24) {
+    			EncoderReset();
+    			this.state2 = RoutineTwo.R2Stop1;
+    		} else {
+    			MoveBack();
+    		}
+    	}
+    	break;
+    	
+    	case R2Stop1:
+    	{
+    		Stop();
+    		EncoderReset();
+    		this.state2 = RoutineTwo.R2TurnLeft;     			
+    		}
+    	break;
+    	
+    	case R2TurnLeft:
+    	{
+    		if(encoderRight.getDistance() >= 17.8678082) {
+    			EncoderReset();
+    			this.state2 = RoutineTwo.R2MoveForward1;
+    		} else {
+    			TurnLeft();
+    		}
+    	}
+    	break;
+    	case R2MoveForward1:
+    	{
+    		if(encoderRight.getDistance() >=93) {
+    			EncoderReset();
+    			this.state2 = RoutineTwo.R2Stop2;
+    		} else {
+    			MoveForward();
+    		}
+    	}
+    	break;
+    	case R2Stop2:
+    	{
+    		Stop();
+    		EncoderReset();
+    		this.state2 = RoutineTwo.R2TurnRight;
+    	}
+    	break;
+    	case R2TurnRight:
+    	{
+    		if(encoderLeft.getDistance() >=17.8678082) {
+    			EncoderReset();
+    			this.state2 = RoutineTwo.R2MoveForward2;
+    		} else {
+    			TurnRight();
+    		}
+    	}
+    	break;
+    	case R2MoveForward2:
+    	{
+    		if(encoderRight.getDistance() >=24) {
+    			EncoderReset();
+    			this.state2 = RoutineTwo.R2Stop3;
+    		} else {
+    			MoveForward();
+    		}
+    	}
+    	break;
+    	case R2Stop3:
+    	{
+    		Stop();
+    		EncoderReset();
+    		this.state2 = RoutineTwo.R2GrabAndStack;
+    	}
+    	break;
+    	case R2GrabAndStack:
+    	{
+    		EncoderReset();
+    		this.state2 = RoutineTwo.R2Lift2;
+    	}
+    	break;
+    	case R2Lift2:
+    	{
+    		EncoderReset();
+    		this.state2 = RoutineTwo.R2MoveBack2;
+    	}
+    	break;
+    	case R2MoveBack2:
+    	{
+    		if(encoderRight.getDistance() <= -105) {
+    			EncoderReset();
+    			this.state2 = RoutineTwo.R2Stop4;
+    		} else {
+    			MoveForward();
+    		}
+    	}
+    	break;
+    	case R2Stop4:
+    	{
+    		Stop();
+    		EncoderReset();
+    		this.state2 = RoutineTwo.R2Drop;
+    	}
+    	break;
+    	case R2Drop:
+    	{
+    		EncoderReset();
+    		this.state2 = RoutineTwo.R2MoveBack3;
+    	}
+    	break;
+    	case R2MoveBack3:
+    	{
+    		if(encoderRight.getDistance() <= -12) {
+    			EncoderReset();
+    			this.state2 = RoutineTwo.TerminateStop;
+    		} else {
+    			MoveBack();
+    		}
+    	}
+    	break;
+    	case TerminateStop:
+    	{
+    		Stop();
+    	}
+    	break;
+    	}
+    }
+    public void RoutineThreePeriodic() {
+    	switch (this.state3) {
+    	case AutoStart:
+    	{
+    		EncoderReset();
+    		this.state3 = RoutineThree.Lift1;
+    	}
+    	break;
+    	case Lift1:
+    	{
+    		EncoderReset();
+    		this.state3 = RoutineThree.MoveBack1;
+    	}
+    	break;
+    	case MoveBack1:
+    	{
+    		if(encoderRight.getDistance() >= 24) {
+    			EncoderReset();
+    			this.state3 = RoutineThree.Stop1;
+    		}
+    	}
+    	break;
+    	
+    	case Stop1:
+    	{
+    		Stop();
+    		EncoderReset();
+    		this.state3 = RoutineThree.TurnLeft;
+
+    	}
+    	break;
+    	
+    	case TurnRight:
+    	{
+    		if(encoderLeft.getDistance() >=17.8678082) {
+    			EncoderReset();
+    			this.state3 = RoutineThree.MoveForward1;
+    		} else {
+    			TurnRight();
+    		}
+
+    	}
+    	break;
+    	case MoveForward1:
+    	{
+    		if(encoderRight.getDistance() >=24) {
+    			EncoderReset();
+    			this.state3 = RoutineThree.Stop2;
+    		} else {
+    			MoveForward();
+    		}
+
+    	}
+    	break;
+    	case Stop2:
+    	{
+    		Stop();
+    		EncoderReset();
+    		this.state3 = RoutineThree.TurnRight;
+
+    	}
+    	break;
+    	case TurnLeft:
+    	{
+    		if(encoderRight.getDistance() >=17.8678082) {
+    			EncoderReset();
+    			this.state3 = RoutineThree.MoveForward2;
+    		} else {
+    			TurnLeft();
+    		}
+
+    	}
+    	break;
+    	case MoveForward2:
+    	{
+    		if(encoderRight.getDistance() >=24) {
+    			EncoderReset();
+    			this.state3 = RoutineThree.Stop3;
+    		} else {
+    			MoveForward();
+    		}
+
+    	}
+    	break;
+    	case Stop3:
+    	{
+    		Stop();
+    		EncoderReset();
+    		this.state3 = RoutineThree.GrabAndStack;
+
+    	}
+    	break;
+    	case GrabAndStack:
+    	{
+    		EncoderReset();
+    		this.state3 = RoutineThree.Lift2;
+
+    	}
+    	break;
+    	case Lift2:
+    	{
+    		EncoderReset();
+    		this.state3 = RoutineThree.MoveBack2;
+
+    	}
+    	break;
+    	case MoveBack2:
+    	{
+    		if(encoderRight.getDistance() <= -105) {
+    			EncoderReset();
+    			this.state3 = RoutineThree.Stop4;
+    		} else {
+    			MoveBack();
+    		}
+
+    	}
+    	break;
+    	case Stop4:
+    	{
+    		Stop();
+    		EncoderReset();
+    		this.state3 = RoutineThree.Drop;
+
+    	}
+    	break;
+    	case Drop:
+    	{
+    		EncoderReset();
+    		this.state3 = RoutineThree.MoveBack3;
+
+    	}
+    	break;
+    	case MoveBack3:
+    	{
+    		if(encoderRight.getDistance() <= -12) {
+    			EncoderReset();
+    			this.state3 = RoutineThree.TerminateStop;
+    		} else {
+    			MoveBack();
+    		}
+
+    	}
+    	break;
+    	case TerminateStop:
+    	{
+    		Stop();
+    	}
+    	break;
+    	}
+    }
+    public void RoutineFourPeriodic() {
+    	switch (this.state4) {
+    	case AutoStart:
+    	{
+    		EncoderReset();
+    		this.state4 = RoutineFour.Lift;
+    	}
+    	break;
+    	case Lift:
+    	{
+    		EncoderReset();
+    		this.state4 = RoutineFour.MoveBack1;
+    	}
+    	break;
+    	case MoveBack1:
+    	{
+    		EncoderReset();
+    		this.state4 = RoutineFour.Stop;
+    	}
+    	break;
+    	case Stop:
+    	{
+    		EncoderReset();
+    		this.state4 = RoutineFour.Drop;
+    	}
+    	break;
+    	case Drop:
+    	{
+    		EncoderReset();
+    		this.state4 = RoutineFour.MoveBack2;
+    	}
+    	break;
+    	case MoveBack2:
+    	{
+    		EncoderReset();
+    		this.state4 = RoutineFour.TerminateStop;
+    		
+    	}
+    	break;
+    	case TerminateStop:
+    	{
+    		Stop();
+    	}
+    	break;
+    	}
+    }
+    public void RoutineFivePeriodic() {
+    	switch (this.state5) {
+    	case AutoStart:
+    	{
+    		EncoderReset();
+    		this.state5 = RoutineFive.Lift;
+    	}
+    	break;
+    	case Lift:
+    	{
+    		EncoderReset();
+    		this.state5 = RoutineFive.MoveBack1;
+    	}
+    	break;
+    	case MoveBack1:
+    	{
+    		if(encoderRight.getDistance() <= -24) {
+    			EncoderReset();
+    			this.state5 = RoutineFive.Stop1;
+    		} else {
+    			MoveBack();
+    		}
+    	}
+    	break;
+    	case Stop1:
+    	{
+    		Stop();
+    		EncoderReset();
+    		this.state5 = RoutineFive.TurnLeft;
+    	}
+    	break;
+    	case TurnLeft:
+    	{
+    		if(encoderRight.getDistance() >= 17.8678082) {
+    			EncoderReset();
+    			this.state5 = RoutineFive.MoveForward1;
+    		} else {
+    			TurnLeft();
+    		}
+    	}
+    	break;
+    	case MoveForward1:
+    	{
+    		if(encoderRight.getDistance() >= 93) {
+    			EncoderReset();
+    			this.state5 = RoutineFive.Stop2;
+    		} else {
+    			MoveForward();
+    		}
+    	}
+    	break;
+    	case Stop2:
+    	{
+    		Stop();
+    		EncoderReset();
+    		this.state5 = RoutineFive.TurnRight;
+    	}
+    	break;
+    	case TurnRight:
+    	{
+    		if(encoderLeft.getDistance() >= 17.8678082) {
+    			EncoderReset();
+    			this.state5 = RoutineFive.MoveForward2;
+    		} else {
+    			TurnRight();
+    		}
+    	}
+    	break;
+    	case MoveForward2:
+    	{
+    		if(encoderRight.getDistance() >= 24) {
+    			EncoderReset();
+    			this.state5 = RoutineFive.Stop3;
+    		} else {
+    			MoveForward();
+    		}
+    	}
+    	case Stop3:
+    	{
+    		Stop();
+    		EncoderReset();
+    		this.state5 = RoutineFive.Stack;
+    	}
+    	break;
+    	case Stack:
+    	{
+    		EncoderReset();
+    		this.state5 = RoutineFive.Grab;
+    	}
+    	break;
+    	case Grab:
+    	{
+    		EncoderReset();
+    		this.state5 = RoutineFive.MoveBack2;
+    	}
+    	break;
+    	case MoveBack2:
+    	{
+    		if(encoderRight.getDistance() <= -105) {
+    			EncoderReset();
+    			this.state5 = RoutineFive.Stop4;
+    		} else {
+    			MoveBack();
+    		}
+    	}
+    	break;
+    	case Stop4:
+    	{
+    		Stop();
+    		EncoderReset();
+    		this.state5 = RoutineFive.Drop;
+    	}
+    	break;
+    	case Drop:
+    	{
+    		EncoderReset();
+    		this.state5 = RoutineFive.MoveBack3;
+    	}
+    	break;
+    	case MoveBack3:
+    	{
+    		if(encoderRight.getDistance() <= -12) {
+    			EncoderReset();
+    			this.state5 = RoutineFive.TerminateStop;
+    		} else {
+    			MoveBack();
+    		}
+    	}
+    	break;
+    	case TerminateStop:
+    	{
+    		Stop();
+    	}
+    	break;
+    	}
+    }
+    public void RoutineSixPeriodic() {
+    	switch (this.state6) {
+    	case AutoStart:
+    	{
+    		EncoderReset();
+    		this.state6 = RoutineSix.MoveBack;
+    	}
+    	break;
+    	case MoveBack:
+    	{
+    		MoveBack();
+    		if (encoderRight.getDistance() <= -60) {
+    			EncoderReset();
+    			this.state6 = RoutineSix.TerminateStop;
+    		}
+    	}
+    	break;
+    	case TerminateStop:
+    	{
+    		Stop();
+    	}
+    	break;
+    	}
+    }
+    public void RoutineSevenPeriodic() {
+    	switch (this.state7) {
+    	case AutoStart:
+    	{
+    		EncoderReset();
+    	}
+    	break;
+    	case PushForward:
+    	{
+    		MoveForward();
+    		if (encoderRight.getDistance() >= 107) {
+        		EncoderReset();
+        		this.state7 = RoutineSeven.TerminateStop;
+    		}
+    			
+    	}
+    	break;
+    	case TerminateStop:
+    	{
+    		Stop();
+    	}
+    	break;
+    	}
+    }
+    public void RoutineEightPeriodic() {
+    	switch (this.state8) {
+    	case AutoStart:
+    	{
+    		EncoderReset();
+    		this.state8 = RoutineEight.Lift1;
+    	}
+    	break;
+    	case Lift1:
+    	{
+    		EncoderReset();
+    		this.state8 = RoutineEight.reverse1;
+    	}
+    	break;
+    	case reverse1:
+    	{
+    		if(encoderRight.getDistance() <= -24) {
+    			EncoderReset();
+    			this.state8 = RoutineEight.stop1;
+    		} else {
+    			MoveBack();
+    		}
+    	}
+    	break;
+    	case stop1:
+    	{
+    		Stop();
+    		EncoderReset();
+    		this.state8 = RoutineEight.TurnLeft1;
+    	}
+    	break;
+    	case TurnLeft1:
+    	{
+    		if (encoderRight.getDistance() >= 17.8678082) {
+    			EncoderReset();
+    			this.state8 = RoutineEight.forward1;
+    		} else {
+    			TurnLeft();
+    		}
+    	}
+    	break;
+    	case forward1:
+    	{
+    		if (encoderRight.getDistance() >= 93) {
+    			EncoderReset();
+    			this.state8 = RoutineEight.stop2;
+    		} else {
+    			MoveForward();
+    		}
+    	}
+    	break;
+    	case stop2:
+    	{
+    		Stop();
+    		EncoderReset();
+    		this.state8 = RoutineEight.TurnRight1;
+    	}
+    	break;
+    	case TurnRight1:
+    	{
+    		if (encoderLeft.getDistance() >= 17.8678082) {
+    		EncoderReset();
+    		this.state8 = RoutineEight.forward2;
+    		} else {
+    			TurnRight();
+    		}
+    	}
+    	break;
+    	case forward2:
+    	{
+    		if (encoderRight.getDistance() >= 24) {
+    		EncoderReset();
+    		this.state8 = RoutineEight.stop3;
+    		} else {
+    			MoveForward();
+    		}
+    	} 
+    	break;
+    	case stop3:
+    	{
+    		Stop();
+    		EncoderReset();
+    		this.state8 = RoutineEight.Lift2;
+    	}
+    	break;
+    	case Lift2:
+    	{
+    		EncoderReset();
+    		this.state8 = RoutineEight.reverse2;
+    	}
+    	break;
+    	case reverse2:
+    	{
+    		if (encoderRight.getDistance() <= -24) {
+    		EncoderReset();
+    		this.state8 = RoutineEight.stop4;
+    		} else {
+    			MoveBack();
+    		}
+    	}
+    	break;
+    	case stop4:
+    	{
+    		Stop();
+    		EncoderReset();
+    		this.state8 = RoutineEight.TurnLeft2;
+    	}
+    	break;
+    	case TurnLeft2:
+    	{
+    		if (encoderRight.getDistance() >= 17.8678082) {
+    		EncoderReset();
+    		this.state8 = RoutineEight.forward3;
+    		} else {
+    			TurnLeft();
+    		}
+    	}
+    	break;
+    	case forward3:
+    	{
+    		if (encoderRight.getDistance() >= 93) {
+    		EncoderReset();
+    		this.state8 = RoutineEight.stop5;
+    		} else {
+    			MoveForward();
+    		}
+    	}
+    	break;
+    	case stop5:
+    	{
+    		Stop();
+    		EncoderReset();
+    		this.state8 = RoutineEight.TurnRight2;
+    	}
+    	break;
+    	case TurnRight2:
+    	{
+    		if (encoderLeft.getDistance() >= 17.8678082) {
+    		EncoderReset();
+    		this.state8 = RoutineEight.forward4;
+    		} else {
+    			TurnRight();
+    		}
+    	}
+    	break;
+    	case forward4:
+    	{
+    		if (encoderRight.getDistance() >= 24) {
+    		EncoderReset();
+    		this.state8 = RoutineEight.stop6;
+    		} else {
+    			MoveForward();
+    		}
+    	}
+    	break;
+    	case stop6:
+    	{
+    		Stop();
+    		EncoderReset();
+    		this.state8 = RoutineEight.Lift3;
+    	} 
+    	break;
+    	case Lift3:
+    	{
+    		EncoderReset();
+    		this.state8 = RoutineEight.reverse3;
+    	}
+    	break;
+    	case reverse3:
+    	{
+    		if (encoderRight.getDistance() <= -105) {
+    		EncoderReset();
+    		this.state8 = RoutineEight.stop7;
+    		} else {
+    			MoveBack();
+    		}
+    	}
+    	break;
+    	case stop7:
+    	{
+    		Stop();
+    		EncoderReset();
+    		this.state8 = RoutineEight.Drop;
+    	}
+    	break;
+    	case Drop:
+    	{
+    		EncoderReset();
+    		this.state8 = RoutineEight.reverse4;
+    	}
+    	break;
+    	case reverse4:
+    	{ 
+    		if (encoderRight.getDistance() <= -12) {
+    		EncoderReset();
+    		this.state8 = RoutineEight.AutoStop;
+    		} else {
+    			MoveBack();
+    		}
+    	}
+    	break;
+    	case AutoStop:
+    	{
+    		Stop();
+    	}
+    	break;
+    	}
+    }
+    
+}
