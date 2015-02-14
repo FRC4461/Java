@@ -35,11 +35,20 @@ public class LiftCommand {
 		private LiftAuto AutoState = LiftAuto.Start;
 		private Stack StackState = Stack.Start;
 		private Drops DropState = Drops.Start;
-	
-	public LiftCommand(Joystick js) {
-		button = new JoystickButton(js, 1);
+	/**
+	 * This function is called during operator control within
+	 * the switch codes. Used for the Lift mechanism
+	 * @param js The joystick used for the button
+	 * @param Jbutton The button used to begin Execute() command
+	 */
+	public LiftCommand(Joystick js, int Jbutton) {
+		button = new JoystickButton(js, Jbutton);
 	}
-	
+	/**
+	 * This function is called during operator control to
+	 * execute a lifting mechanism for lifting totes and
+	 * containers
+	 */
 	public void Execute() {
 		if (button.get()) {
 			switch(TeleState) {
@@ -75,6 +84,14 @@ public class LiftCommand {
 			}
 		}
  	}
+	/**
+	 * This function is called periodically during autonomous within
+	 * the switch codes. Used for lifting mechanisms
+	 * @param Switch Determines which lifting mechanism to use.
+	 * True is for lifting ONLY. False is for Stacking ONLY
+	 * @param length Determines the distance the motors go to
+	 * lift the totes and/or containers
+	 */
 	public void ExecutePeriodic(boolean Switch, int length) {  //Used for Autonomous Routines
 		Robot.liftEncoder.reset();
 		if (Switch) {
@@ -153,6 +170,11 @@ public class LiftCommand {
 			} 
 		}
 	}
+	/**
+	 * This funtion is called during autonomous within the switch codes.
+	 * Used solely for the purpose of lowering totes and stacked totes and containers
+	 * to the ground
+	 */
 	public void Drop() {
 		switch(DropState) {
 		case Start:

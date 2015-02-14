@@ -40,25 +40,22 @@ public class Robot extends IterativeRobot {
 		public static edu.wpi.first.wpilibj.Solenoid Collector = new edu.wpi.first.wpilibj.Solenoid(1);
 		
 	//Lift
-		public static edu.wpi.first.wpilibj.Victor lifting = new edu.wpi.first.wpilibj.Victor(5);
+		public static edu.wpi.first.wpilibj.Victor lifting = new edu.wpi.first.wpilibj.Victor(5);  //Lift Command
 		
 	//Encoder
 		edu.wpi.first.wpilibj.Encoder encoderRight = new edu.wpi.first.wpilibj.Encoder(1, 2);
 		edu.wpi.first.wpilibj.Encoder encoderLeft = new edu.wpi.first.wpilibj.Encoder(3, 4);
-		public static edu.wpi.first.wpilibj.Encoder liftEncoder = new edu.wpi.first.wpilibj.Encoder(5, 6);
+		public static edu.wpi.first.wpilibj.Encoder liftEncoder = new edu.wpi.first.wpilibj.Encoder(5, 6);   //Lift Command
 		
 	//Switches and sensors
 		edu.wpi.first.wpilibj.DigitalInput limitSwitch = new edu.wpi.first.wpilibj.DigitalInput(5);
-		
-	//Camera
-		//edu.wpi.first.wpilibj.vision.AxisCamera camera = new edu.wpi.first.wpilibj.vision.AxisCamera("10.44.61.11");
 	
 	//Miscellaneous
 		edu.wpi.first.wpilibj.smartdashboard.SmartDashboard SmartDash = new edu.wpi.first.wpilibj.smartdashboard.SmartDashboard();
 		private int mode = 1;
 		private SendableChooser autoSwitch;
-		public static boolean Lift = false;
-		LiftCommand CommandLift;
+		public static boolean Lift = false;   //Lift Command
+		LiftCommand CommandLift;   //Lift Command
 	
     /**
      * This function is run when the robot is first started up and should be
@@ -66,15 +63,22 @@ public class Robot extends IterativeRobot {
      */
     public void robotInit() {
     	//Lift
-    		CommandLift = new LiftCommand(joystick);
+    		CommandLift = new LiftCommand(joystick, 1);   //Lift Command
     	
     	//Encoder
     		encoderRight.setDistancePerPulse(0.006135923);
     		encoderRight.setReverseDirection(true);
     		encoderLeft.setDistancePerPulse(0.006135923);
+    		encoderLeft.setReverseDirection(false);
+    		liftEncoder.setDistancePerPulse(0.002);
     		liftEncoder.setReverseDirection(true);
 		//Smartdashboard
-    		//SmartDashboard.putNumber("Autonomous Routines: ", mode);
+    		/**
+    		 * Switches between Autonomous Routines before
+    		 * autonomousPeriodic() is called. The SmartDashboard
+    		 * contains buttons to be able to switch through
+    		 * Routines before Autonomous begins.
+    		 */
     		autoSwitch = new SendableChooser();
     		autoSwitch.addDefault("Routine One", 1);
     		autoSwitch.addObject("Routine Two", 2);
@@ -86,10 +90,11 @@ public class Robot extends IterativeRobot {
     		autoSwitch.addObject("Routine Eight", 8);
     		SmartDashboard.putData("Autonomous Routines", autoSwitch);
     
-    	//edu.wpi.first.wpilibj.CameraServer.getInstance().
     }
+    /**
+     * This function is called before atonomous
+     */
     public void autonomousInit() {
-    	//SmartDashboard.getNumber("Autonomous Routines: ");
     	mode = (int) autoSwitch.getSelected();
     }
     /**
@@ -145,7 +150,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    	CommandLift.Execute();
+    	CommandLift.Execute();   //LiftCommand
         robotDrive.arcadeDrive(joystick);
     } 
     /**
@@ -186,7 +191,12 @@ public class Robot extends IterativeRobot {
     void Stop() {
     	robotDrive.drive(0.0, 0.0);
     }
-    
+    /**
+     * This function tells the robot to reset all encoders as to avaoid
+     * disturbances from the switch code when using the encoders for
+     * percise lengths. Used within the switch code for the left and
+     * right encoders mounted on the motors
+     */
     void EncoderReset() {
     	encoderRight.reset();
     	encoderLeft.reset();
@@ -893,7 +903,7 @@ public class Robot extends IterativeRobot {
     		}
     	}
     	case Stop3:
-    	{
+	    {
     		Stop();
     		EncoderReset();
     		this.state5 = RoutineFive.Lift2;
@@ -1221,7 +1231,7 @@ public class Robot extends IterativeRobot {
     		Stop();
     	}
     	break;
-    	}
+    	} 
     }
     
 }
