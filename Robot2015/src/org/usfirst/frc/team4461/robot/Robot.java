@@ -40,9 +40,12 @@ public class Robot extends IterativeRobot {
 		edu.wpi.first.wpilibj.Victor frontLeftMotorControl = new edu.wpi.first.wpilibj.Victor(4);
 		edu.wpi.first.wpilibj.RobotDrive robotDrive = new edu.wpi.first.wpilibj.RobotDrive(frontLeftMotorControl, backLeftMotorControl, frontRightMotorControl, backRightMotorControl);
 	
+	//Lift
+		public static edu.wpi.first.wpilibj.Victor lifting = new edu.wpi.first.wpilibj.Victor(5);
+		
 	//Encoder
 		edu.wpi.first.wpilibj.Encoder encoderRight = new edu.wpi.first.wpilibj.Encoder(4, 3);
-		edu.wpi.first.wpilibj.Encoder encoderLeft = new edu.wpi.first.wpilibj.Encoder(8, 9);
+		public static edu.wpi.first.wpilibj.Encoder encoderLeft = new edu.wpi.first.wpilibj.Encoder(8, 9);
 	
 	//Switches and sensors
 		edu.wpi.first.wpilibj.DigitalInput limitSwitch = new edu.wpi.first.wpilibj.DigitalInput(5);
@@ -107,19 +110,6 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         robotDrive.arcadeDrive(joystick);
-      /*  RGBImage colours = null;
-		try {
-			colours = new RGBImage();
-		} catch (NIVisionException e) {
-			e.printStackTrace();
-		}
-        camera.getImage(colours);
-        try {
-			colours.getBluePlane();
-		} catch (NIVisionException e) {
-			e.printStackTrace();
-		}
-        edu.wpi.first.wpilibj.CameraServer.getInstance().setImage(colours.image); */
     } 
     /**
      * This function tells the robot to move forward during Autonomous. 
