@@ -39,14 +39,17 @@ public class Robot extends IterativeRobot {
 		edu.wpi.first.wpilibj.Victor backLeftMotorControl = new edu.wpi.first.wpilibj.Victor(3);
 		edu.wpi.first.wpilibj.Victor frontLeftMotorControl = new edu.wpi.first.wpilibj.Victor(4);
 		edu.wpi.first.wpilibj.RobotDrive robotDrive = new edu.wpi.first.wpilibj.RobotDrive(frontLeftMotorControl, backLeftMotorControl, frontRightMotorControl, backRightMotorControl);
-	
+	//Pneumatics
+		public static edu.wpi.first.wpilibj.Solenoid Collector = new edu.wpi.first.wpilibj.Solenoid(1);
+		
 	//Lift
 		public static edu.wpi.first.wpilibj.Victor lifting = new edu.wpi.first.wpilibj.Victor(5);
 		
 	//Encoder
-		edu.wpi.first.wpilibj.Encoder encoderRight = new edu.wpi.first.wpilibj.Encoder(4, 3);
-		public static edu.wpi.first.wpilibj.Encoder encoderLeft = new edu.wpi.first.wpilibj.Encoder(8, 9);
-	
+		edu.wpi.first.wpilibj.Encoder encoderRight = new edu.wpi.first.wpilibj.Encoder(1, 2);
+		edu.wpi.first.wpilibj.Encoder encoderLeft = new edu.wpi.first.wpilibj.Encoder(3, 4);
+		public static edu.wpi.first.wpilibj.Encoder liftEncoder = new edu.wpi.first.wpilibj.Encoder(5, 6);
+		
 	//Switches and sensors
 		edu.wpi.first.wpilibj.DigitalInput limitSwitch = new edu.wpi.first.wpilibj.DigitalInput(5);
 		
@@ -57,16 +60,21 @@ public class Robot extends IterativeRobot {
 		edu.wpi.first.wpilibj.smartdashboard.SmartDashboard SmartDash = new edu.wpi.first.wpilibj.smartdashboard.SmartDashboard();
 		private int mode = 1;
 		private SendableChooser autoSwitch;
+		LiftCommand CommandLift;
 	
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
+    	//Lift
+    		CommandLift = new LiftCommand(joystick);
+    	
     	//Encoder
     		encoderRight.setDistancePerPulse(0.006135923);
     		encoderRight.setReverseDirection(true);
     		encoderLeft.setDistancePerPulse(0.006135923);
+    		liftEncoder.setReverseDirection(true);
 		//Smartdashboard
     		//SmartDashboard.putNumber("Autonomous Routines: ", mode);
     		autoSwitch = new SendableChooser();
@@ -101,6 +109,36 @@ public class Robot extends IterativeRobot {
     		RoutineTwoPeriodic();
     	}
     	break;
+    	case 3:
+    	{
+    		RoutineThreePeriodic();
+    	}
+    	break;
+    	case 4:
+    	{
+    		RoutineFourPeriodic();
+    	}
+    	break;
+    	case 5:
+    	{
+    		RoutineFivePeriodic();
+    	}
+    	break;
+    	case 6:
+    	{
+    		RoutineSixPeriodic();
+    	}
+    	break;
+    	case 7:
+    	{
+    		RoutineSevenPeriodic();
+    	}
+    	break;
+    	case 8:
+    	{
+    		RoutineEightPeriodic();
+    	}
+    	break;
     	}
     	
     }
@@ -109,6 +147,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+    	CommandLift.Execute();
         robotDrive.arcadeDrive(joystick);
     } 
     /**

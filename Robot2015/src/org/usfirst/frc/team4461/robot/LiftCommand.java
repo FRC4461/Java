@@ -9,8 +9,7 @@ public class LiftCommand {
 		Start,
 		BreakRelease,
 		Lift,
-		BreakStart,
-		Stop
+		BreakStart
 	}
 	
 		JoystickButton button;
@@ -21,35 +20,41 @@ public class LiftCommand {
 	}
 	
 	public void Execute() {
-		
 		if (button.get()) {
 			switch(TeleState) {
 			case Start:
 			{
-				Robot.encoderLeft.reset();
+				Robot.liftEncoder.reset();
+				TeleState = Lift.BreakRelease;
 			}
 			break;
 			case BreakRelease:
 			{
-				
+				Robot.Collector.set(true);
+				Robot.liftEncoder.reset();
+				TeleState = Lift.Lift;
 			}
 			break;
 			case Lift:
 			{
-				
+				if(Robot.liftEncoder.getDistance() >= 13) { //Estimated Teeth separation amount 
+					Robot.liftEncoder.reset();
+					TeleState = Lift.BreakStart;
+				} else {
+					Robot.lifting.set(0.2);
+				}
 			}
 			break;
 			case BreakStart:
 			{
-				
-			}
-			break;
-			case Stop:
-			{
-				
+				Robot.Collector.set(false);
+				Robot.liftEncoder.reset();
 			}
 			break;
 			}
 		}
  	}
+	public void ExecutePeriodic() {  //Not Finished; Used for Autonomous Routines
+		
+	}
 }
