@@ -68,7 +68,7 @@ public class Robot extends IterativeRobot {
     		autoSwitch.addObject("Auto States Test", 3);
     		SmartDashboard.putData("Autonomous Routines", autoSwitch);
     
-    	//edu.wpi.first.wpilibj.CameraServer.getInstance().
+    	edu.wpi.first.wpilibj.CameraServer.getInstance().startAutomaticCapture("axis-00408cdfe00a");
     }
     public void autonomousInit() {
     	//SmartDashboard.getNumber("Autonomous Routines: ");
