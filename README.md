@@ -3,6 +3,11 @@ Java
 
 Java code for FRC team 4461 'Ramen'
 
+References
+====
+Vision: http://docs.opencv.org/doc/tutorials/introduction/java_eclipse/java_eclipse.html#java-eclipse
+        http://wpilib.screenstepslive.com/s/3120/m/7932/l/93058-smart-dashboard-standalone-vision-installer
+
 Guidelines
 ====
 
