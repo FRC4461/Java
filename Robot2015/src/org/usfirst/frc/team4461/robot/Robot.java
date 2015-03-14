@@ -5,11 +5,28 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the IterativeRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the manifest file in the resource
- * directory.
+ * 
+ * @author Developer
+ *
+ * Wiring pin outs
+ * 		Digital IO
+ * 			0 - 
+ * 			1 - Right encoder A
+ * 			2 - Right encoder B
+ * 			3 - Left encoder A
+ * 			4 - Left encoder B
+ * 			5 - Lift encoder A
+ * 			6 - Lift encoder B
+ * 			7 - Forward aimed limit switch
+ * 
+ * 		PWMs
+ * 			0 - 
+ * 			1 - Front right motor
+ * 			2 - Rear right motor
+ * 			3 - Rear left motor
+ * 			4 - Front left motor
+ * 			5 - Lift motor A
+ * 			6 - Lift motor B
  */
 public class Robot extends IterativeRobot {
 	//Routines
@@ -40,7 +57,8 @@ public class Robot extends IterativeRobot {
 		public static edu.wpi.first.wpilibj.Solenoid Collector = new edu.wpi.first.wpilibj.Solenoid(1);
 		
 	//Lift
-		public static edu.wpi.first.wpilibj.Victor lifting = new edu.wpi.first.wpilibj.Victor(5);  //Lift Command
+		public static edu.wpi.first.wpilibj.Victor liftingA = new edu.wpi.first.wpilibj.Victor(5);  //Lift Command
+		public static edu.wpi.first.wpilibj.Victor liftingB = new edu.wpi.first.wpilibj.Victor(6);  //Lift Command
 		
 	//Encoder
 		edu.wpi.first.wpilibj.Encoder encoderRight = new edu.wpi.first.wpilibj.Encoder(1, 2);
@@ -48,7 +66,7 @@ public class Robot extends IterativeRobot {
 		public static edu.wpi.first.wpilibj.Encoder liftEncoder = new edu.wpi.first.wpilibj.Encoder(5, 6);   //Lift Command
 		
 	//Switches and sensors
-		edu.wpi.first.wpilibj.DigitalInput limitSwitch = new edu.wpi.first.wpilibj.DigitalInput(5);
+		edu.wpi.first.wpilibj.DigitalInput limitSwitch = new edu.wpi.first.wpilibj.DigitalInput(7);
 	
 	//Miscellaneous
 		edu.wpi.first.wpilibj.smartdashboard.SmartDashboard SmartDash = new edu.wpi.first.wpilibj.smartdashboard.SmartDashboard();
