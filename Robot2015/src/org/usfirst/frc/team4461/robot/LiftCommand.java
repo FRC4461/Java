@@ -9,6 +9,7 @@ public class LiftCommand {
 		Start,
 		BreakRelease,
 		Lift,
+		Lower,
 		BreakStart
 	}
 	enum LiftAuto {
@@ -30,7 +31,8 @@ public class LiftCommand {
 		Terminate
 	}
 	
-		JoystickButton button;
+		JoystickButton liftButton;
+		JoystickButton lowerButton;
 		private Lift TeleState = Lift.Start; 
 		private LiftAuto AutoState = LiftAuto.Start;
 		private Stack StackState = Stack.Start;
@@ -41,8 +43,9 @@ public class LiftCommand {
 	 * @param js The joystick used for the button
 	 * @param Jbutton The button used to begin Execute() command
 	 */
-	public LiftCommand(Joystick js, int Jbutton) {
-		button = new JoystickButton(js, Jbutton);
+	public LiftCommand(Joystick js, int liftButtonNumber, int lowerButtonNumber) {
+		liftButton = new JoystickButton(js, liftButtonNumber);
+		lowerButton = new JoystickButton(js, lowerButtonNumber);
 	}
 	/**
 	 * This function is called during operator control to
@@ -50,7 +53,7 @@ public class LiftCommand {
 	 * containers
 	 */
 	public void Execute() {
-		if (button.get()) {
+		if (liftButton.get()) {
 			switch(TeleState) {
 			case Start:
 			{
@@ -75,14 +78,46 @@ public class LiftCommand {
 					Robot.liftingB.set(0.3);
 				}
 			}
+			
 			break;
-			case BreakStart:
+			}
+		}
+		else if (lowerButton.get())
+		{
+			switch(TeleState) {
+			case Start:
 			{
-				Robot.Collector.set(false);
 				Robot.liftEncoder.reset();
+				TeleState = Lift.BreakRelease;
 			}
 			break;
+			case BreakRelease:
+			{
+				Robot.Collector.set(true);
+				Robot.liftEncoder.reset();
+				TeleState = Lift.Lower;
 			}
+			break;
+			case Lower:
+			{
+				Robot.liftingA.set(0.3);
+				Robot.liftingB.set(0.3);
+			}
+			
+			break;
+			
+			default:
+				TeleState = Lift.Start;
+				break;
+			}
+		}
+		else
+		{
+			Robot.Collector.set(false);
+			Robot.liftingA.set(0.0);
+			Robot.liftingB.set(0.0);
+			Robot.liftEncoder.reset();
+			TeleState = Lift.Start;
 		}
  	}
 	/**

@@ -21,12 +21,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * 
  * 		PWMs
  * 			0 - 
- * 			1 - Front right motor
- * 			2 - Rear right motor
- * 			3 - Rear left motor
- * 			4 - Front left motor
+ * 			1 - Rear left motor
+ * 			2 - Front left motor
+ * 			3 - Front right motor
+ * 			4 - Rear right motor
  * 			5 - Lift motor A
  * 			6 - Lift motor B
+ * 
+ * Controls
+ * 		Joystick 0
+ * 			Left control
+ * 		Joystick 1
+ * 			Right control
+ * 			Button 11 - Lift up
+ * 			Button 12 - Lift down
  */
 public class Robot extends IterativeRobot {
 	//Routines
@@ -45,13 +53,14 @@ public class Robot extends IterativeRobot {
 		int timeForward2 = 0;
 	
 	//Joy sticks
-		edu.wpi.first.wpilibj.Joystick joystick = new edu.wpi.first.wpilibj.Joystick(0);
+		edu.wpi.first.wpilibj.Joystick joystickLeft = new edu.wpi.first.wpilibj.Joystick(0);
+		edu.wpi.first.wpilibj.Joystick joystickRight = new edu.wpi.first.wpilibj.Joystick(1);
 	
 	//Drive Base
-		edu.wpi.first.wpilibj.Victor frontRightMotorControl = new edu.wpi.first.wpilibj.Victor(1);
-		edu.wpi.first.wpilibj.Victor backRightMotorControl = new edu.wpi.first.wpilibj.Victor(2);
-		edu.wpi.first.wpilibj.Victor backLeftMotorControl = new edu.wpi.first.wpilibj.Victor(3);
-		edu.wpi.first.wpilibj.Victor frontLeftMotorControl = new edu.wpi.first.wpilibj.Victor(4);
+		edu.wpi.first.wpilibj.Victor frontRightMotorControl = new edu.wpi.first.wpilibj.Victor(3);
+		edu.wpi.first.wpilibj.Victor backRightMotorControl = new edu.wpi.first.wpilibj.Victor(4);
+		edu.wpi.first.wpilibj.Victor backLeftMotorControl = new edu.wpi.first.wpilibj.Victor(1);
+		edu.wpi.first.wpilibj.Victor frontLeftMotorControl = new edu.wpi.first.wpilibj.Victor(2);
 		edu.wpi.first.wpilibj.RobotDrive robotDrive = new edu.wpi.first.wpilibj.RobotDrive(frontLeftMotorControl, backLeftMotorControl, frontRightMotorControl, backRightMotorControl);
 	//Pneumatics
 		public static edu.wpi.first.wpilibj.Solenoid Collector = new edu.wpi.first.wpilibj.Solenoid(1);
@@ -81,7 +90,7 @@ public class Robot extends IterativeRobot {
      */
     public void robotInit() {
     	//Lift
-    		CommandLift = new LiftCommand(joystick, 1);   //Lift Command
+    		CommandLift = new LiftCommand(joystickRight, 11, 12);   //Lift Command
     	
     	//Encoder
     		encoderRight.setDistancePerPulse(0.006135923);
@@ -169,7 +178,7 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
     	CommandLift.Execute();   //LiftCommand
-        robotDrive.arcadeDrive(joystick);
+        robotDrive.tankDrive(-joystickLeft.getY(), -joystickRight.getY());
     } 
     /**
      * This function tells the robot to move forward during Autonomous. 
