@@ -83,6 +83,7 @@ public class Robot extends IterativeRobot {
 		private SendableChooser autoSwitch;
 		public static boolean Lift = false;   //Lift Command
 		LiftCommand CommandLift;   //Lift Command
+		LiftTeleop TeleopLift;
 	
     /**
      * This function is run when the robot is first started up and should be
@@ -90,8 +91,12 @@ public class Robot extends IterativeRobot {
      */
     public void robotInit() {
     	//Lift
-    		CommandLift = new LiftCommand(joystickRight, 11, 12);   //Lift Command
+    		CommandLift = new LiftCommand();   //Lift Command
+    		TeleopLift = new LiftTeleop(joystickRight, 11, 10, 6, 7);
     	
+    		liftingA.setSafetyEnabled(true);
+    		liftingB.setSafetyEnabled(true);
+    		
     	//Encoder
     		encoderRight.setDistancePerPulse(0.006135923);
     		encoderRight.setReverseDirection(true);
@@ -177,7 +182,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    	CommandLift.Execute();   //LiftCommand
+    	TeleopLift.ExecutePeriodic();
         robotDrive.tankDrive(-joystickLeft.getY(), -joystickRight.getY());
     } 
     /**

@@ -30,96 +30,11 @@ public class LiftCommand {
 		Lower,
 		Terminate
 	}
-	
-		JoystickButton liftButton;
-		JoystickButton lowerButton;
-		private Lift TeleState = Lift.Start; 
+	 
 		private LiftAuto AutoState = LiftAuto.Start;
 		private Stack StackState = Stack.Start;
 		private Drops DropState = Drops.Start;
-	/**
-	 * This function is called during operator control within
-	 * the switch codes. Used for the Lift mechanism
-	 * @param js The joystick used for the button
-	 * @param Jbutton The button used to begin Execute() command
-	 */
-	public LiftCommand(Joystick js, int liftButtonNumber, int lowerButtonNumber) {
-		liftButton = new JoystickButton(js, liftButtonNumber);
-		lowerButton = new JoystickButton(js, lowerButtonNumber);
-	}
-	/**
-	 * This function is called during operator control to
-	 * execute a lifting mechanism for lifting totes and
-	 * containers
-	 */
-	public void Execute() {
-		if (liftButton.get()) {
-			switch(TeleState) {
-			case Start:
-			{
-				Robot.liftEncoder.reset();
-				TeleState = Lift.BreakRelease;
-			}
-			break;
-			case BreakRelease:
-			{
-				Robot.Collector.set(true);
-				Robot.liftEncoder.reset();
-				TeleState = Lift.Lift;
-			}
-			break;
-			case Lift:
-			{
-				if(Robot.liftEncoder.getDistance() >= 13) { //Estimated Teeth separation amount 
-					Robot.liftEncoder.reset();
-					TeleState = Lift.BreakStart;
-				} else {
-					Robot.liftingA.set(0.3);
-					Robot.liftingB.set(0.3);
-				}
-			}
-			
-			break;
-			}
-		}
-		else if (lowerButton.get())
-		{
-			switch(TeleState) {
-			case Start:
-			{
-				Robot.liftEncoder.reset();
-				TeleState = Lift.BreakRelease;
-			}
-			break;
-			case BreakRelease:
-			{
-				Robot.Collector.set(true);
-				Robot.liftEncoder.reset();
-				TeleState = Lift.Lower;
-			}
-			break;
-			case Lower:
-			{
-				Robot.liftingA.set(0.3);
-				Robot.liftingB.set(0.3);
-			}
-			
-			break;
-			
-			default:
-				TeleState = Lift.Start;
-				break;
-			}
-		}
-		else
-		{
-			Robot.Collector.set(false);
-			Robot.liftingA.set(0.0);
-			Robot.liftingB.set(0.0);
-			Robot.liftEncoder.reset();
-			TeleState = Lift.Start;
-		}
- 	}
+	
 	/**
 	 * This function is called periodically during autonomous within
 	 * the switch codes. Used for lifting mechanisms
