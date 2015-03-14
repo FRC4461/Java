@@ -71,7 +71,8 @@ public class LiftCommand {
 					Robot.liftEncoder.reset();
 					TeleState = Lift.BreakStart;
 				} else {
-					Robot.lifting.set(0.3);
+					Robot.liftingA.set(0.3);
+					Robot.liftingB.set(0.3);
 				}
 			}
 			break;
@@ -113,12 +114,14 @@ public class LiftCommand {
 			case Lift:
 			{
 				if (Robot.liftEncoder.getDistance() >= length) {
-				Robot.lifting.set(0.0);
+				Robot.liftingA.set(0.0);
+				Robot.liftingB.set(0.0);
 				Robot.liftEncoder.reset();
 				Robot.Collector.set(false);
 				Robot.Lift = true;
 				} else {
-					Robot.lifting.set(0.3);
+					Robot.liftingA.set(0.3);
+					Robot.liftingB.set(0.3);
 				}
 			}
 			break;
@@ -145,25 +148,29 @@ public class LiftCommand {
 					Robot.liftEncoder.reset();
 					StackState = Stack.Stop;
 				} else {
-					Robot.lifting.set(-0.2);
+					Robot.liftingA.set(-0.2);
+					Robot.liftingB.set(-0.2);
 				}
 			}
 			break;
 			case Stop:
 			{
 				Robot.liftEncoder.reset();
-				Robot.lifting.set(0.0);
+				Robot.liftingA.set(0.0);
+				Robot.liftingB.set(0.0);
 				StackState = Stack.Lift;
 			}
 			case Lift:
 			{
 				if(Robot.liftEncoder.getDistance() >= 5) {    //Estimation
 					Robot.liftEncoder.reset();
-					Robot.lifting.set(0.0);
+					Robot.liftingA.set(0.0);
+					Robot.liftingB.set(0.0);
 					Robot.Collector.set(false);
 					Robot.Lift = true;
 				} else {
-					Robot.lifting.set(0.2);
+					Robot.liftingA.set(0.2);
+					Robot.liftingB.set(0.2);
 				}
 			}
 			break;
@@ -171,7 +178,7 @@ public class LiftCommand {
 		}
 	}
 	/**
-	 * This funtion is called during autonomous within the switch codes.
+	 * This function is called during autonomous within the switch codes.
 	 * Used solely for the purpose of lowering totes and stacked totes and containers
 	 * to the ground
 	 */
@@ -197,14 +204,16 @@ public class LiftCommand {
 				Robot.liftEncoder.reset();
 				DropState = Drops.Terminate;
 			} else {
-				Robot.lifting.set(0.3);
+				Robot.liftingA.set(0.3);
+				Robot.liftingB.set(0.3);
 			}
 		}
 		break;
 		case Terminate:
 		{
 			Robot.Collector.set(false);
-			Robot.lifting.set(0.0);
+			Robot.liftingA.set(0.0);
+			Robot.liftingB.set(0.0);
 			Robot.Lift = true;
 		}
 		break;
